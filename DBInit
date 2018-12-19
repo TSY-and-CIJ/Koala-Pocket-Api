@@ -1,0 +1,77 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Reference
+ * https://github.com/kladd/slim-eloquent
+ */
+require __DIR__.'/vendor/autoload.php';
+
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+define("MIGRATIONS_PATH", __DIR__. "/database/migrations");
+define("SEEDS_PATH", __DIR__. "/database/seeds");
+define("SETTING_PATH", __DIR__. "/src/settings.php");
+
+class DBInit {
+
+    private $setting;
+
+    function __construct($args)
+    {
+        $this->args = $args;
+        $this->setting = require SETTING_PATH;
+        $this->connection();
+    }
+
+    function help()
+    {
+        echo "\n";
+        echo "syntaxis: php DBInit <command> [<args>]" . PHP_EOL;
+        echo PHP_EOL;
+        echo "Commands: \n";
+        echo "php DBInit --help                  -->   Displays the help menu." . PHP_EOL;
+        echo "php DBInit migrate                 -->   Migrate the database." . PHP_EOL;
+        echo "php DBInit migrate force           -->   Force migrate the database." . PHP_EOL;
+        echo PHP_EOL;
+    }
+
+    function exec()
+    {
+        if (count($this->args) <= 1) {
+            $this->help();
+        } else {
+            switch ($this->args[1]) {
+                case "migrate":
+                    $this->runMigrations();
+                    break;
+                case "help":
+                case "--help":
+                    $this->help();
+                    break;
+            }
+        }
+    }
+
+    function runMigrations()
+    {
+        $files = glob(MIGRATIONS_PATH . '/*.php');
+        $force = isset($this->args[2]) && $this->args[2] === 'force';
+        foreach ($files as $file) {
+            require_once($file);
+            $class = basename($file, '.php');
+            $obj = new $class;
+            $obj->up($force);
+            fputs(STDERR, "$class \n");
+        }
+    }
+
+    private function connection()
+    {
+        $capsule = new Capsule();
+        $capsule->addConnection($this->setting['settings']['db']);
+        $capsule->setAsGlobal();
+        $capsule->bootEloquent();
+    }
+}
+$novice = new DBInit($argv);
+$novice->exec();
