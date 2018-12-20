@@ -1,8 +1,8 @@
-# Group User
+# Group Login 
 
-## User [/user]
+## Login [/login]
 
-### User 登入 [POST]
+### 登入 [POST]
 
   + Request (application/json)
     ```
