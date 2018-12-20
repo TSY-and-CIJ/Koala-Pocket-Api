@@ -1,0 +1,25 @@
+language: node_js
+
+node_js:
+  - "9"
+
+branches:
+  only:
+    - master
+    - develop
+
+install:
+  - npm install
+  - npm i -g aglio
+
+script:
+  - mkdir dist
+  - aglio --theme-variables flatly -i spec/api.apib.md -o dist/index.html
+
+deploy:
+  provider: pages
+  local-dir: dist
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  on:
+     branch: develop
