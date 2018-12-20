@@ -16,11 +16,13 @@ class CreateUserTable
             $this->down();
         }
 
-        Capsule::schema()->create('users', function (Blueprint $table) {
+        Capsule::schema()->create('user', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('password');
-            $table->timestamps();
+            $table->integer('created_at')->nullable();
+            $table->integer('updated_at')->nullable();
+            $table->integer('deleted_at')->nullable();
         });
     }
 
@@ -31,6 +33,6 @@ class CreateUserTable
      */
     public function down()
     {
-        Capsule::schema()->dropIfExists('users');
+        Capsule::schema()->dropIfExists('user');
     }
 }
