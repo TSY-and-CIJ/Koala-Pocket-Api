@@ -11,4 +11,5 @@ class Shop extends Model
     protected $table = 'shop';
     protected $dateFormat = 'U';
     protected $fillable = ['name'];
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 }

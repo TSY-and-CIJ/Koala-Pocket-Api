@@ -30,4 +30,25 @@ class ShopController extends BaseController
 
         return $this->successReturn($response, $request);
     }
+
+    public function update(Request $request, Response $response, array $args)
+    {
+        $request = $request->getParams();
+        if (!isset($request['name'])) {
+            return $this->unprocessableReturn($response, "缺少 name 欄位.");
+        }
+
+        try {
+            $shop = Shop::find($args['id']);
+            if (!$shop) {
+                throw new \Exception("The shop is not found. (shop_id: {$args['id']})");
+            }
+
+            $shop->update(['name' => $request['name']]);
+        } catch (\Exception $e) {
+            return $this->serverErrorReturn($response, $e->getMessage());
+        }
+
+        return $this->successReturn($response, $shop->toArray());
+    }
 }
