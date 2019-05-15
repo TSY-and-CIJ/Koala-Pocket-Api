@@ -51,4 +51,15 @@ class ShopController extends BaseController
 
         return $this->successReturn($response, $shop->toArray());
     }
+
+    public function delete(Request $request, Response $response, array $args)
+    {
+        try {
+            Shop::destroy((int) $args['id']);
+        } catch (\Exception $e) {
+            return $this->serverErrorReturn($response, $e->getMessage());
+        }
+
+        return $this->successReturn($response, $request);
+    }
 }
