@@ -10,3 +10,4 @@ $app->get('/', function (Request $request, Response $response, array $args) {
     return $this->renderer->render($response, 'index.phtml', $args);
 });
 $app->get('/shops', ShopController::class . ':get');
+$app->post('/shop', ShopController::class . ':create');

@@ -10,4 +10,5 @@ class Shop extends Model
 
     protected $table = 'shop';
     protected $dateFormat = 'U';
+    protected $fillable = ['name'];
 }
