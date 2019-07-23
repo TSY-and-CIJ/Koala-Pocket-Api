@@ -2,31 +2,17 @@
 
 namespace App\controllers;
 
+use App\traits\ResponseTrait;
+use Slim\Http\Request;
 use Slim\Http\Response;
 
 class BaseController
 {
-    protected function unprocessableReturn(Response $res, $message)
-    {
-        return $res->withStatus(422)->withJson($this->generateOutput([], 422, $message));
-    }
+    use ResponseTrait;
 
-    protected function successReturn(Response $res, $data)
+    public function __invoke(Request $request, Response $response, array $args)
     {
-        return $res->withStatus(200)->withJson($this->generateOutput($data));
-    }
-
-    protected function serverErrorReturn(Response $res, $message)
-    {
-        return $res->withStatus(500)->withJson($this->generateOutput([], 500, $message));
-    }
-
-    protected function generateOutput($data, $status = 200, $message = "")
-    {
-        return [
-            "status" => $status,
-            "message" => $message,
-            "data" => $data
-        ];
+        $method = $request->getMethod();
+        return $this->$method($request, $response, $args);
     }
 }
