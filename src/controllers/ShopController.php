@@ -7,19 +7,15 @@ use Slim\Http\Response;
 
 class ShopController extends BaseController
 {
-    public function get(Request $request, Response $response)
+    public function get(Request $request, Response $response, array $args)
     {
         $shops = Shop::query()->select(['id', 'name'])->get()->toArray();
         return $this->successReturn($response, $shops);
     }
 
-    public function create(Request $request, Response $response)
+    public function post(Request $request, Response $response, array $args)
     {
         $request = $request->getParams();
-        if (!isset($request['name'])) {
-            return $this->unprocessableReturn($response, "缺少 name 欄位.");
-        }
-
         try {
             Shop::create([
                 'name' => $request['name']
@@ -31,13 +27,9 @@ class ShopController extends BaseController
         return $this->successReturn($response, $request);
     }
 
-    public function update(Request $request, Response $response, array $args)
+    public function put(Request $request, Response $response, array $args)
     {
         $request = $request->getParams();
-        if (!isset($request['name'])) {
-            return $this->unprocessableReturn($response, "缺少 name 欄位.");
-        }
-
         try {
             $shop = Shop::find($args['id']);
             if (!$shop) {
@@ -55,6 +47,11 @@ class ShopController extends BaseController
     public function delete(Request $request, Response $response, array $args)
     {
         try {
+            $shop = Shop::find($args['id']);
+            if (!$shop) {
+                throw new \Exception("The shop is not found. (shop_id: {$args['id']})");
+            }
+
             Shop::destroy((int) $args['id']);
         } catch (\Exception $e) {
             return $this->serverErrorReturn($response, $e->getMessage());
