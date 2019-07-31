@@ -18,6 +18,17 @@ $container['logger'] = function ($c) {
     return $logger;
 };
 
+// 404 error handler
+$container['notFoundHandler'] = function ($c) {
+    return function ($request, $response) use ($c) {
+        $response = new \Slim\Http\Response(404);
+        return $response->write(json_encode([
+            "status" => 404,
+            "message" => 'The api not found.',
+            "data" => []
+        ]));
+    };
+};
 
 $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($container['settings']['db']);
