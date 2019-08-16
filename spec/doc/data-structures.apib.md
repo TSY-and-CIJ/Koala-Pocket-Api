@@ -32,6 +32,18 @@
 + `name`(string, required)
 + `icon_id` (number, required, nullable)
 
+## Acount Object (object)
++ `id`: 1 (number, required)
++ `name`: 錢包 (string, required)
++ `account_type` (Acount Type Object)
++ `price`: 2000 (number, required)
++ `projects` (array, required)
+
+## Acount Type Object (object)
++ `id`: 1 (number, required)
++ `name`: 現金 (string, required)
++ `icon_id` (number, required, nullable)
+
 ## 401 Error (Base Object)
 ### Properties
   + `status`: 401
